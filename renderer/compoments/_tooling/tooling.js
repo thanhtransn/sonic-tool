@@ -2,6 +2,8 @@ const form = document.querySelector("#form");
 const fileData = form.querySelector("#file-data");
 const folderData = form.querySelector("#verify-data");
 const dataExport = document.querySelector("#data-exported");
+const toastContainer = document.querySelector("#toast-container");
+const toastMessage = document.querySelector("#toast-message");
 
 // Make sure file is an image
 function isExcelFile(file) {
@@ -24,14 +26,28 @@ function updateScroll(scrolled) {
     const element = document.querySelector("#data-exported");
     element.scrollTop = element.scrollHeight;
   }
+  return;
 }
 
 function processVerifyData(e) {
   e.preventDefault();
-  if (!isExcelFile(fileData.files[0]))
-    alertError("The File Fomart Is Not Correct!!!");
-  if (!isfolderImage(folderData.files))
-    alertError("The Folder Data Fomart Is Not Correct!!!");
+  
+  if (!isExcelFile(fileData.files[0])) {
+    showToast(
+      "The File Fomart Is Not Correct!!!",
+      "bg-danger"
+    );
+    return;
+  }
+
+  if (!isfolderImage(folderData.files)){
+    showToast(
+      "The Folder Data Fomart Is Not Correct!!!",
+      "bg-danger"
+    );
+    return;
+  }
+
 
   const pathFileData = fileData.files[0].path;
   const pathFolderData = folderData.files[0].path.substring(
@@ -42,6 +58,10 @@ function processVerifyData(e) {
     pathFileData,
     pathFolderData,
   });
+
+  dataExport.textContent = '';
+
+  return;
 }
 
 // When done, show message
@@ -54,47 +74,40 @@ ipcRenderer.on("data:done", (data) => {
     data.status
       ? element.classList.add("mb-2", "text-success")
       : element.classList.add("mb-2", "text-danger");
-    element.innerHTML = data.message;
+    element.textContent = data.message;
     dataExport.appendChild(element);
     updateScroll();
     return 0;
-  }, 500);
+  }, 100);
   return 0;
 });
 
-ipcRenderer.on("process:done", (data) => alertSuccess(data));
+ipcRenderer.on("process:done", (data) => showToast(data, "background-success"));
 
-ipcRenderer.on("process:error", (data) => alertError(data));
+ipcRenderer.on("process:error", (data) => showToast(data, "background-error"));
 
-function alertSuccess(message) {
-  Toastify.toast({
-    text: message,
-    duration: 100,
-    close: false,
-    style: {
-      background: "green",
-      color: "white",
-      textAlign: "center",
-    },
-  });
-}
+ipcRenderer.on("process:warning", (data) => showToast(data, "background-warning"));
 
-function alertError(message) {
-  Toastify.toast({
-    text: message,
-    duration: 5000,
-    close: false,
-    style: {
-      background: "red",
-      color: "white",
-      textAlign: "center",
-    },
-  });
+function showToast(message, color) {
+  toastContainer.classList.add(color);
+  toastMessage.textContent = message;
+
+  setTimeout(function(){
+    toastContainer.style.width = "300px";
+  }, 500);
+  
+  setTimeout(function(){
+    toastContainer.style.width = "0";
+    toastContainer.classList.remove(color)
+  }, 3000);
+  return; 
 }
 
 // Form submit listener
 form.addEventListener("submit", processVerifyData);
 
-form.addEventListener("click", (e) => {
-  if (e.target.matches("#verify")) dataExport.innerHTML = "";
-});
+toastContainer.addEventListener("click", (e)=>{
+  if (e.target.matches("button")){
+    toastContainer.style.width = "0";
+  } 
+})

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'" />
+  <link href="./index.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" async
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+  <script src="./tooling.js" defer></script>
+  <title>Sonic Tool</title>
+</head>
+
+<body class="container-fluid overflow-hidden opacity-25">
+  <div class="row d-flex flex-column flex-md-row p-2 m-auto mw-100 mh-100">
+    <div class="col d-flex flex-column">
+      <div class="badge bg-primary text-wrap p-2 fs-6 fw-bold align-middle">
+        Data Input
+      </div>
+      <form class="d-flex flex-column justify-content-center align-self-center shadow p-3 mb-5 rounded mt-3 w-100"
+        id="form">
+        <div class="mb-3">
+          <label for="formFile" class="form-label">File Name</label>
+          <input class="form-control" type="file" id="file-data" required>
+        </div>
+        <div class="mb-3">
+          <label for="verify-data" class="form-label">Referenced Data</label>
+          <input class="form-control" type="file" id="verify-data" webkitdirectory multiple required>
+        </div>
+        <button type="submit" class="btn btn-success" id="verify">Verify</button>
+      </form>
+
+    </div>
+    <div class="col d-flex flex-column">
+      <div class="badge bg-primary text-wrap p-2 fs-6 fw-bold align-middle">
+        Process
+      </div>
+
+      <div class="d-block position-sticky mt-3">
+        <h4 for="data-exported">Data Export</h4>
+        <ol class="position-relative m-0 bg-light flex-wrap shadow-sm rounded border border-4 export"
+          id="data-exported">
+        </ol>
+      </div>
+    </div>
+  </div>
+  <div class="toast show align-items-center text-white border-0 toast-inform" style="width: 0;" id="toast-container" role="alert" aria-live="assertive"
+    aria-atomic="true">
+    <div class="d-flex">
+      <div class="toast-body" id="toast-message"></div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+        aria-label="Close"></button>
+    </div>
+  </div>
+</body>
+
+</html>

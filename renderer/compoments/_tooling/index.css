@@ -1,0 +1,26 @@
+.toast-inform {
+    height: 50px;
+    position: absolute;
+    bottom: 32px;
+    right: 12px;
+    z-index: 1;
+    transition: 0.5s;
+}
+
+.export {
+    height: 300px;  
+    overflow-y: auto;
+    text-wrap: wrap;
+}
+
+.background-success {
+   background: linear-gradient(to right, #00b09b, #96c93d);
+}
+
+.background-warning {
+    background: linear-gradient(to right, #ebd234, #ebc934);
+}
+
+.background-error {
+    background: linear-gradient(to right, #fc3d03, #fc4903),
+}

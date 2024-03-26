@@ -1,3 +1,6 @@
+const luxon = require("luxon");
+const DateTime = luxon.DateTime;
+
 async function extractData(dataInput) {
   const dataVerify = [];
   dataInput.worksheets.forEach((sheet) => {
@@ -96,7 +99,8 @@ async function exportExistedModel(
   from,
   destination,
   existedModel,
-  reference
+  reference,
+  sender
 ) {
   const promises = [];
   const existedFileName = new Map();
@@ -129,15 +133,24 @@ async function exportExistedModel(
       const fn = new Promise(async (resolve, reject) => {
         exporter.copyFile(`${from}/${file}`, destinationPath, (error) => {
           if (error) {
-            reject({
-              mesage: `Model_${e.product.join("_")} is not exported`,
-              status: false,
-            });
+            setTimeout(function(){
+              sender.send("data:done", {
+                mesage: `Model_${e.product.join("_")} is not exported`,
+                status: false,
+              });
+            }, 500);
+           
+            reject(`${e.product.join("_")}_error`);
           }
-          resolve({
-            message: `Model_${e.product.join("_")} is exported`,
-            status: true,
-          });
+
+          setTimeout(function(){
+            sender.send("data:done", {
+              message: `Model_${e.product.join("_")} is exported`,
+              status: true,
+            });
+          }, 500);
+
+          resolve(`${e.product.join("_")}_success`);
         });
       });
       promises.push(fn);
@@ -181,6 +194,10 @@ async function exportReport(dataExport, excelWriter, path, exportFolderSize) {
   );
 }
 
+function extractTime(start, end, opt) {
+  return end.diff(DateTime.fromISO(start), [`${opt}`])[`${opt}`];
+}
+
 function handelError(mainWindow, e) {
   mainWindow.send("process:error", `${e.message}_errorCode_${e.errorCode}`);
   throw 0;
@@ -192,4 +209,5 @@ module.exports = {
   exportExistedModel,
   exportReport,
   handelError,
+  extractTime,
 };

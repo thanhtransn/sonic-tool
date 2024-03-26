@@ -1,4 +1,3 @@
-require("dotenv").config();
 const path = require("path");
 const os = require("os");
 const f = require("fs");
@@ -10,7 +9,7 @@ const {
   verify,
   exportReport,
   exportExistedModel,
-} = require("./helper.js");
+} = require("../utils/helper.js");
 
 async function tool({ pathFileData, pathFolderData }, mainWindow, shell) {
   const __dirname = path.join(os.homedir(), "Documents", "DataExporter");
@@ -126,12 +125,9 @@ async function tool({ pathFileData, pathFolderData }, mainWindow, shell) {
     referenceFilePath,
     destinationExportModel,
     existedModel,
-    dataReference
-  )
-    .then((result) =>
-      result.forEach((e) => mainWindow.webContents.send("data:done", e.value))
-    )
-    .catch(() =>
+    dataReference,
+    sender = mainWindow.webContents
+  ).then().catch(() =>
       handelError(mainWindow.webContents, {
         message: "SOMETHING WENT WRONG!!!",
         errorCode: 1009,
