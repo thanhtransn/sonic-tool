@@ -3,6 +3,7 @@ const os = require("os");
 const f = require("fs");
 const fs = require("fs/promises");
 const Excel = require("exceljs");
+const EnvConfiguration = require("../configurations/global.config.js");
 const {
   handelError,
   extractData,
@@ -10,6 +11,8 @@ const {
   exportReport,
   exportExistedModel,
 } = require("../utils/helper.js");
+
+const env = EnvConfiguration.getEnv();
 
 async function tool({ pathFileData, pathFolderData }, mainWindow, shell) {
   const __dirname = path.join(os.homedir(), "Documents", "DataExporter");
@@ -148,10 +151,10 @@ async function tool({ pathFileData, pathFolderData }, mainWindow, shell) {
 
   mainWindow.webContents.send("process:done", "PROCESS IS COMPLETED!!!");
   setTimeout(function () {
-    if (process.env.IS_OPENED === "false") {
+    if (!env.is_opened) {
       shell.openPath(__dirname);
     }
-    process.env.IS_OPENED = true;
+    env.is_opened = true;
     return 0;
   }, 3000);
   return 0;

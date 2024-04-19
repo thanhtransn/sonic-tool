@@ -1,4 +1,4 @@
-require("dotenv").config();
+const { updateElectronApp, UpdateSourceType } = require('update-electron-app');
 const path = require("path");
 const { app, BrowserWindow, Menu, ipcMain, shell } = require("electron");
 const { tool } = require("./features/tool");
@@ -6,20 +6,29 @@ const { verifyUser } = require("./utils/auth");
 const DateTime = require("luxon").DateTime;
 const Database = require("./configurations/database.config");
 const { extractTime } = require("./utils/helper");
+const EnvConfiguration = require("./configurations/global.config");
+/* auto update*/
+updateElectronApp({
+  updateSource: {
+    host: 'https://update.electronjs.org',
+    type: UpdateSourceType.ElectronPublicUpdateService,
+    repo: 'thanhtransn/sonic-tool'
+  },
+  updateInterval: '1 hour',
+  logger: require('electron-log')
+})
 
-process.env.MONGO_URI =
-  "mongodb+srv://sonic:tranvanthanh1708@cluster0.8vsuhvf.mongodb.net/sonic?retryWrites=true&w=majority&appName=Cluster0";
-process.env.NODE_ENV = "production";
-process.env.IS_OPENED = false;
+const env = EnvConfiguration.getEnv();
 
-const db = new Database({ url: process.env.MONGO_URI });
+const db = new Database({ url: env.mongo_uri });
 db.getInstance();
 
-const isDev = process.env.NODE_ENV !== "production";
+const isDev = env.node_env !== "production";
 const isMac = process.platform === "darwin";
+const localStorage = new Map();
+
 let mainWindow;
 let aboutWindow;
-const localStorage = new Map();
 
 // Main Window
 function createMainWindow(page) {
