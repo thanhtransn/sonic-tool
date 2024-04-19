@@ -1,0 +1,5 @@
+{
+    "mongo_uri" :"mongodb+srv://sonic:tranvanthanh1708@cluster0.8vsuhvf.mongodb.net/sonic?retryWrites=true&w=majority&appName=Cluster0",
+    "node_env": "production",
+    "is_opened": false
+}

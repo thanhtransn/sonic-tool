@@ -9,6 +9,17 @@
     "package": "electron-forge package",
     "make": "electron-forge make"
   },
+  "build": {
+    "appId": "your.app.id",
+    "productName": "Sonic",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "./assets/icons/icons8-sonic-256.png"
+    }
+  },
   "keywords": [],
   "author": "sonic",
   "license": "ISC",
@@ -23,7 +34,6 @@
     "electron-builder": "^23.6.0"
   },
   "dependencies": {
-    "dotenv": "^16.4.5",
     "electron-squirrel-startup": "^1.0.0",
     "exceljs": "^4.3.0",
     "luxon": "^3.4.4",
